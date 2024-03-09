@@ -1,0 +1,56 @@
+---
+- name: Synchronize Neovim configuration across all VMs
+  hosts: all
+  become: true
+
+  vars_files:
+    - secret_vars_common.yml
+
+  vars:
+    http_server_ip_and_port: "192.168.77.10:8000"
+    nvim_config_archive_name: "nvim-config.tar.gz"
+    save_path: "/tmp/{{ nvim_config_archive_name }}"
+    extract_path: "/home/{{ ansible_user }}/.config/nvim"
+    aliases_file: "/home/{{ ansible_user }}/.alias"
+
+  tasks:
+    - name: Ensure tar and gzip are installed
+      ansible.builtin.apt:
+        name:
+          - tar
+          - gzip
+        state: present
+
+    - name: Download nvim configuration archive
+      ansible.builtin.get_url:
+        url: "http://{{ http_server_ip_and_port }}/{{ nvim_config_archive_name }}"
+        dest: "{{ save_path }}"
+
+    - name: Ensure the Neovim config directory exists
+      ansible.builtin.file:
+        path: "{{ extract_path }}"
+        state: directory
+        mode: '0755'
+
+    - name: Extract nvim configuration
+      ansible.builtin.unarchive:
+        src: "{{ save_path }}"
+        dest: "{{ extract_path }}"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: Install vim-plug for Neovim
+      ansible.builtin.shell: >
+        curl -fLo "/home/{{ ansible_user }}/.local/share/nvim/site/autoload/plug.vim" --create-dirs
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      become: yes
+
+    - name: Add Neovim alias to .alias file
+      ansible.builtin.lineinfile:
+        path: "{{ aliases_file }}"
+        line: "alias v='nvim';"
+        create: yes
+
+    - name: Install and update Neovim plugins non-interactively
+      ansible.builtin.shell: >
+        nvim --headless +PlugInstall +PlugUpdate +qa

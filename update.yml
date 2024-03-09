@@ -1,0 +1,13 @@
+---
+- name: Update-packages
+  hosts: renaissance
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  tasks:
+    - name: Update all packages
+      ansible.builtin.apt:
+        name: "*"
+        state: latest

@@ -1,0 +1,27 @@
+---
+- name: install neovim latest version
+  hosts: renaissance_master
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  tasks:
+    - name: ensure software-properties-common is installed
+      ansible.builtin.apt:
+        name: software-properties-common
+        state: present
+
+    - name: add neovim ppa
+      ansible.builtin.apt_repository:
+        repo: ppa:neovim-ppa/unstable
+        state: present
+      become: yes
+
+    - name: install neovim
+      ansible.builtin.apt:
+        update_cache: yes
+        name: neovim
+        state: latest
+        force: yes
+      become: yes

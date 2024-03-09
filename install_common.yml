@@ -1,0 +1,65 @@
+---
+- name: htop-vim-install
+  hosts: renaissance
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  tasks:
+    - name: install git
+      apt:
+        name: git
+        state: latest
+
+    - name: install htop
+      apt:
+        name: htop
+        state: latest
+
+    - name: install curl
+      apt:
+        name: curl
+        state: latest
+
+    - name: install vim
+      apt:
+        name: vim
+        state: latest
+
+    - name: install rsync
+      apt:
+        name: rsync
+        state: latest
+
+    - name: Ensure apt-utils is installed
+      ansible.builtin.apt:
+        name: apt-utils
+        state: present
+
+    - name: install python3
+      apt:
+        name: python3
+        state: latest
+
+    - name: install python3-virtualenv
+      apt:
+        name: python3-virtualenv
+        state: latest
+
+    - name: Ensure pynvim is installed for Neovim Python3 support
+      ansible.builtin.pip:
+        name: pynvim
+        state: latest
+      become: yes
+
+    - name: Install yapf globally
+      ansible.builtin.pip:
+        name: yapf
+        state: latest
+      become: yes
+
+    - name: install golang-go
+      apt:
+        name: golang-go
+        state: latest

@@ -1,0 +1,12 @@
+---
+- name: htop-vim-install
+  hosts: renaissance_nodes
+  become: yes
+  vars_files:
+    - secret_vars_common.yml
+    - secret_vars_k3s_nodes.yml
+
+  tasks:
+    - name: Install k3s on nodes
+      ansible.builtin.shell: >
+        curl -sfL https://get.k3s.io | K3S_URL=https://{{ server }}:6443 K3S_TOKEN={{ token }} sh -

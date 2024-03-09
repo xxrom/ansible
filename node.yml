@@ -1,0 +1,33 @@
+---
+- name: Install Node.js version 20.x
+  hosts: renaissance
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  tasks:
+    - name: Ensure curl and software-properties-common are installed
+      ansible.builtin.apt:
+        name:
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add NodeSource repository for Node.js 20.x
+      ansible.builtin.shell: >
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+      args:
+        executable: /bin/bash
+
+    - name: Install Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        state: latest
+        update_cache: yes
+
+    - name: install npm
+      apt:
+        name: npm
+        state: latest
