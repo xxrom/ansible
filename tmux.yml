@@ -1,0 +1,84 @@
+---
+- name: Setup Zsh environment
+  hosts: renaissance_master
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  tasks:
+    - name: Install tmux
+      ansible.builtin.apt:
+        name: tmux
+        state: present
+        update_cache: yes
+
+    - name: Clone tmux Plugin Manager (TPM)
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: ~/.tmux/plugins/tpm
+        version: master
+      become_user: "{{ ansible_user }}"
+
+    - name: Create .tmux.conf
+      ansible.builtin.copy:
+        dest: ~/.tmux.conf
+        content: |
+          # List of plugins
+          set -g @plugin 'tmux-plugins/tmux-yank'
+          set -g @plugin 'tmux-plugins/tpm'
+          set -g @plugin 'tmux-plugins/tmux-sensible'
+          set -g @plugin 'tmux-plugins/tmux-resurrect'
+          set -g @plugin 'tmux-plugins/tmux-continuum'
+          set -g @plugin 'dracula/tmux'
+          set -g @dracula-show-powerline false
+          set -g @dracula-show-left-icon session
+          set -g @dracula-plugins "cpu-usage ram-usage"
+          set -g @dracula-border-contrast true
+          set -g @dracula-military-time true
+          set -g @dracula-show-empty-plugins false
+          set -g @dracula-refresh-rate 1
+          set -g @dracula-cpu-display-load true
+          # available colors: white, gray, dark_gray, light_purple, dark_purple, cyan, green, orange, red, pink, yellow
+          set -g @dracula-cpu-usage-colors "red dark_gray"
+          set -g @dracula-ram-usage-colors "light_purple dark_gray"
+          set -g renumber-windows on
+          set -g mouse on
+          bind -r h select-pane -L
+          bind -r j select-pane -D
+          bind -r k select-pane -U
+          bind -r l select-pane -R
+          bind-key t switch-client -l
+          set -g status-justify centre
+          set -s escape-time 0
+          set -g base-index 1
+          setw -g pane-base-index 1
+          unbind r
+          bind r source-file ~/.tmux.conf
+          set-window-option -g mode-keys vi
+          set -g status-keys vi
+          set -g history-limit 100000
+          set-window-option -g automatic-rename on
+          set-option -g set-titles on
+          bind-key r source-file ~/.tmux.conf
+          bind '"' split-window -v -c "#{pane_current_path}"
+          bind % split-window -h -c "#{pane_current_path}"
+          set -g default-terminal "tmux-256color"
+          set-option -g pane-active-border-style fg=blue
+          set-option -g status-left '#P'
+          set-option -g repeat-time 0
+          bind-key -T copy-mode-vi 'v' send -X begin-selection
+          bind-key -T copy-mode-vi 'y' send -X copy-selection
+          bind -T copy-mode-vi WheelUpPane select-pane \; send-keys -X -N 2 scroll-up
+          bind -T copy-mode-vi WheelDownPane select-pane \; send-keys -X -N 2 scroll-down
+          run-shell "powerline-daemon -q"
+          run '~/.tmux/plugins/tpm/tpm'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+      become_user: "{{ ansible_user }}"
+
+    - name: Install tmux plugins
+      ansible.builtin.command:
+        cmd: "~/.tmux/plugins/tpm/bin/install_plugins"
+      become_user: "{{ ansible_user }}"
