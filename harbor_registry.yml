@@ -1,0 +1,30 @@
+- name: Configure k3s to use private Harbor registry
+  hosts: renaissance
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  vars:
+    harbor_ip: "192.168.77.150:8044"
+
+  tasks:
+    - name: Ensure /etc/rancher/k3s directory exists
+      ansible.builtin.file:
+        path: /etc/rancher/k3s
+        state: directory
+        mode: '0755'
+
+    - name: Setup registries.yaml for k3s
+      ansible.builtin.blockinfile:
+        path: /etc/rancher/k3s/registries.yaml
+        create: yes
+        block: |
+          mirrors:
+            "{{ harbor_ip }}":
+              endpoint:
+                - "http://{{ harbor_ip }}"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        owner: root
+        group: root
+        mode: '0644'

@@ -165,7 +165,7 @@
           alias ga='git add '
           alias gaa='git add --all'
 
-          alias glog='git log --graph --pretty='\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\'' --abbrev-commit'
+          alias glog='git log --graph --pretty='\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an %ae>%Creset'\'' --abbrev-commit'
 
           ## Git, Show git branches sorted by created date
           alias gbl='git branch --sort=-committerdate';

@@ -31,3 +31,88 @@ ansible_become_password: 12345678
 server: 192.168.1.100
 token: 23fasdf3::server:1234asdf
 ```
+
+---
+
+---
+
+---
+
+---
+
+# Harbor (local self-hosted docker registry)
+
+## Harbor how to config and run on master k3s VM (Ubuntu)
+
+1. Dowload latest version from github:
+   `wget https://github.com/goharbor/harbor/releases/download/v2.9.3/harbor-offline-installer-v2.9.3.tgz`
+2. Extract
+   ... todo ...
+
+### Default Harbor user / password:
+
+```
+username: admin
+password: Harbor12345
+```
+
+---
+
+## Harbor example how to publish docker image
+
+1. Run using IP and PORT (192.168.77.150:8044)
+
+2. Creta new user (nikita / password)
+
+3. Login from docker
+   `docker login 192.168.77.150:8044`
+   `docker login core.harbor.domain --username=admin --password Harbor12345`
+
+4. Create docker image
+   `sudo docker build -t library/nginx-example .`
+
+5. Add tag to created image
+   `docker tag library/nginx-example 192.168.77.150:8044/library/nginx-example:latest`
+
+6. Push to local docker registry - Harbor
+   `docker push 192.168.77.150:8044/library/nginx-example:latest`
+
+7. Use this image name with full path in yaml config file
+
+```
+...
+containers:
+- name: nginx
+  image: 192.168.77.150:8044/library/nginx-example
+  imagePullPolicy: IfNotPresent
+  ports:
+  - containerPort: 80
+...
+
+```
+
+8. On Master and Nodes add this mirror for checking docker images:
+   file: `/etc/rancher/k3s/registries.yaml`
+   use IP and PORT of the Harbor VMs:
+
+```
+mirrors:
+  "192.168.77.150:8044":
+    endpoint:
+      - "http://192.168.77.150:8044"
+```
+
+9. Restart k3s
+   `sudo systemctl restart k3s`
+
+---
+
+---
+
+---
+
+---
+
+# Useful links:
+
+-   k8s aliases: https://learnk8s.io/blog/kubectl-productivity
