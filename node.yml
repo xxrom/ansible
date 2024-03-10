@@ -27,7 +27,7 @@
         state: latest
         update_cache: yes
 
-    - name: install npm
-      apt:
-        name: npm
-        state: latest
+    - name: Install Yarn globally using npm
+      become: yes
+      ansible.builtin.command:
+        cmd: npm install --global yarn
