@@ -1,4 +1,30 @@
-# How to use ansible _with_ vault values:
+# First start (Ubuntu)
+
+## Install _ansible_
+
+`sudo apt update && 
+sudo apt install software-properties-common -y &&
+sudo add-apt-repository -y --update ppa:ansible/ansible &&
+sudo apt install ansible -y`
+
+---
+
+## Add vault password file
+
+Run commands from the ansible root folder:
+
+`echo "myVaultPassword" > ./vaultpassw
+chmod 600 ./valutpassw`
+
+Be sure that vaultpassw file is in .gitignore file
+
+## How to use vault password file
+
+`ansible-playbook --vault-password-file ./vaultpassw playbook.yml`
+
+---
+
+## How to use ansible _with_ vault values:
 
 `asnbile-playbook install_common.yml --ask-vault-pass`
 

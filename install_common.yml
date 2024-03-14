@@ -63,3 +63,13 @@
       apt:
         name: golang-go
         state: latest
+
+    - name: install ripgrep
+      apt:
+        name: ripgrep
+        state: latest
+
+    - name: install fzf
+      apt:
+        name: fzf
+        state: latest
