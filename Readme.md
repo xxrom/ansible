@@ -94,11 +94,21 @@ password: Harbor12345
    `docker login 192.168.77.150:8044`
    `docker login core.harbor.domain --username=admin --password Harbor12345`
 
+4. Create simple nginx local 'Dockerfile'
+
+```
+FROM nginx:1.10.1-alpine
+COPY index.html /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+
+```
+
 4. Create docker image
-   `sudo docker build -t library/nginx-example .`
+   `sudo docker build -t nginx-example .`
 
 5. Add tag to created image
-   `docker tag library/nginx-example 192.168.77.150:8044/library/nginx-example:latest`
+   `docker tag nginx-example 192.168.77.150:8044/library/nginx-example:latest`
 
 6. Push to local docker registry - Harbor
    `docker push 192.168.77.150:8044/library/nginx-example:latest`
