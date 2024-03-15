@@ -41,7 +41,7 @@
         dest: /etc/docker/daemon.json
         content: |
           {
-            "insecure-registries" : {{ harbor_ip | to_json }}
+            "insecure-registries" : ["{{ harbor_ip }}", "0.0.0.0"]
           }
         owner: root
         group: root

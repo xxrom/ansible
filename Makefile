@@ -6,6 +6,7 @@ init-everything:
 	ansible-playbook k3s_master.yml --vault-password-file ./vaultpassw
 	ansible-playbook k3s_nodes.yml --vault-password-file ./vaultpassw
 	ansible-playbook nvim.yml --vault-password-file ./vaultpassw
+	# run $ sh ./sh/nvim-sync.sh
 	ansible-playbook nvim-sync.yml --vault-password-file ./vaultpassw
 	ansible-playbook docker.yml --vault-password-file ./vaultpassw
 	# ansible-playbook harbor.yml --vault-password-file ./vaultpassw
