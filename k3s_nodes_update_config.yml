@@ -1,0 +1,32 @@
+---
+- name: Configure k3s to use updated token and IP (used secret_vars_k3s_nodes.yml)
+  hosts: renaissance_nodes
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+    - secret_vars_k3s_nodes.yml
+
+  # token location on master
+  # $ sudo cat /var/lib/rancher/k3s/server/node-token
+  #
+  # update secret_vars_k3s_nodes => token
+  # $ ansible-playbook edit secret_vars_k3s_nodes.yml
+
+  tasks:
+
+    - name: Update K3s agent configuration
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system/k3s-agent.service
+        regexp: '^ExecStart=/usr/local/bin/k3s'
+        line: 'ExecStart=/usr/local/bin/k3s agent --server https://{{ server }}:6443 --token {{ token }}'
+        backrefs: yes
+
+    - name: Reload systemd daemon and restart K3s agent
+      become: yes
+      ansible.builtin.systemd:
+        daemon_reload: yes
+        name: k3s-agent
+        state: restarted
+        enabled: yes

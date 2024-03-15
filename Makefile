@@ -8,3 +8,9 @@ init-everything:
 	ansible-playbook nvim.yml --vault-password-file ./vaultpassw
 	ansible-playbook nvim-sync.yml --vault-password-file ./vaultpassw
 	ansible-playbook docker.yml --vault-password-file ./vaultpassw
+	# ansible-playbook harbor.yml --vault-password-file ./vaultpassw
+	ansible-playbook harbor_registry.yml --vault-password-file ./vaultpassw
+
+
+update_k3s_config:
+	ansible-playbook k3s_nodes_udpate_config.yml --vault-password-file ./vaultpassw
