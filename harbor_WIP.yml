@@ -1,0 +1,101 @@
+---
+- name: Install Harbor
+  hosts: renaissance_master
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  vars:
+    harbor_admin_password: "Harbor12345"
+    harbor_hostname: "192.168.77.150"
+    harbor_port: "8044"
+    harbor_install_dir: "/opt/harbor"
+    harbor_config_template: "./harbor.yml.tmpl"
+
+  tasks:
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - jq
+        state: present
+
+    - name: Fetch the latest Harbor release tag from GitHub
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/goharbor/harbor/releases/latest
+        return_content: yes
+      register: harbor_release_json
+
+    - name: Set Harbor version variable
+      set_fact:
+        harbor_version: "{{ harbor_release_json.json.tag_name }}"
+
+    - name: Set Harbor offline installer URL
+      set_fact:
+        harbor_offline_installer_url: "https://github.com/goharbor/harbor/releases/download/{{ harbor_version }}/harbor-offline-installer-{{ harbor_version }}.tgz"
+
+    - name: Create Harbor installation directory
+      ansible.builtin.file:
+        path: "{{ harbor_install_dir }}"
+        state: directory
+        mode: '777'
+
+
+    - name: Download Harbor offline installer
+      ansible.builtin.get_url:
+        url: "{{ harbor_offline_installer_url }}"
+        dest: "/tmp/harbor-offline-installer-{{ harbor_version }}.tgz"
+
+    - name: Extract Harbor installer
+      ansible.builtin.unarchive:
+        src: "/tmp/harbor-offline-installer-{{ harbor_version }}.tgz"
+        dest: "{{ harbor_install_dir }}"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: Copy Harbor configuration template
+      become: yes
+      ansible.builtin.copy:
+        dest: "{{ harbor_install_dir }}/harbor.yml"
+        content: |
+          hostname: {{ harbor_hostname }}
+
+          http:
+            port: {{ harbor_port }}
+
+          https:
+            # port: 443
+            # Fill in certificate and private key paths if HTTPS is needed
+
+          harbor_admin_password: {{ harbor_admin_password }}
+
+          database:
+            password: root123
+            max_idle_conns: 50
+            max_open_conns: 100
+
+          data_volume: /data
+
+          log:
+            level: info
+            local:
+              rotate_count: 50
+              rotate_size: 200M
+              location: /var/log/harbor
+
+    - name: Install Harbor using the installation script
+      ansible.builtin.shell: |
+        {{ harbor_install_dir }}/install.sh
+      become: yes
+
+    - name: Check Harbor UI accessibility
+      ansible.builtin.uri:
+        url: http://{{ harbor_hostname }}:{{ harbor_port }}
+        method: GET
+        return_content: yes
+      register: harbor_ui_response
+      become: no
+      delegate_to: localhost

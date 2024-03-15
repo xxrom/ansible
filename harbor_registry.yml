@@ -7,6 +7,7 @@
 
   vars:
     harbor_ip: "192.168.77.150:8044"
+    harbor_directory: "/opt/harbor"
 
   tasks:
     - name: Ensure /etc/rancher/k3s directory exists
@@ -28,3 +29,42 @@
         owner: root
         group: root
         mode: '0644'
+
+    - name: Create Docker daemon configuration directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/docker
+        state: directory
+        mode: '0755'
+
+    - name: Update Docker daemon configuration
+      ansible.builtin.copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "insecure-registries" : {{ harbor_ip | to_json }}
+          }
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - restart docker
+
+    - name: Stop Harbor
+      ansible.builtin.shell: docker compose down -v
+      args:
+        chdir: "{{ harbor_directory }}"
+      become: true
+
+    - name: Start Harbor
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: "{{ harbor_directory }}"
+      become: true
+
+  handlers:
+    - name: restart docker
+      become: true
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+        enabled: yes
