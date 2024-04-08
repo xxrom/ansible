@@ -40,14 +40,6 @@
         owner: "{{ ansible_env.USER }}"
         mode: '0755'
 
-    - name: Clone zsh-autosuggestions
-      ansible.builtin.git:
-        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
-        dest: "{{ user_path }}/.zsh/plugins/zsh-autosuggestions"
-        version: master
-        clone: yes
-        update: yes
-
     - name: Clone zsh-syntax-highlighting
       ansible.builtin.git:
         repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
@@ -91,7 +83,6 @@
 
           plugins=(git)
 
-          source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
           source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
           HISTSIZE=10000
@@ -118,6 +109,7 @@
           alias rra='source ~/.alias';
           alias c='clear';
           alias cl='clear';
+          alias f='fuck ';
 
           alias v='nvim';
 

@@ -47,6 +47,11 @@
         name: python3-virtualenv
         state: latest
 
+    - name: install python3-pip
+      apt:
+        name: python3-pip
+        state: latest
+
     - name: Ensure pynvim is installed for Neovim Python3 support
       ansible.builtin.pip:
         name: pynvim
@@ -73,3 +78,9 @@
       apt:
         name: fzf
         state: latest
+
+    - name: install thef
+      ansible.builtin.pip:
+        name: thefuck
+        extra_args: --user
+      become: yes

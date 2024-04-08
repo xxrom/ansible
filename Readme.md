@@ -9,6 +9,12 @@ sudo apt install ansible -y`
 
 ---
 
+## Ansible host file location (on macos)
+
+-   `/etc/ansible/hosts`
+
+---
+
 ## Add vault password file
 
 Run commands from the ansible root folder:
