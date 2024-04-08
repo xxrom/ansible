@@ -9,9 +9,10 @@ sudo apt install ansible -y`
 
 ---
 
-## Ansible host file location (on macos)
+## Ansible host file location
 
--   `/etc/ansible/hosts`
+-   linux `/usr/local/etc/ansible/`
+-   macos `/etc/ansible/hosts`
 
 ---
 
