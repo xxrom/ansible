@@ -1,0 +1,12 @@
+all:
+  children:
+    renaissance:
+      hosts:
+        latte:
+          ansible_host: 192.168.77.170
+          ansible_user: latte
+    renaissance_master:
+      hosts:
+        latte:
+          ansible_host: 192.168.77.170
+          ansible_user: latte

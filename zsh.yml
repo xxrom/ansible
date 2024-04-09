@@ -48,6 +48,14 @@
         clone: yes
         update: yes
 
+    - name: Clone zsh-autosuggestions
+      ansible.builtin.git:
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions'
+        dest: "{{ user_path }}/.zsh/plugins/zsh-autosuggestions"
+        version: master
+        clone: yes
+        update: yes
+
     - name: ZSH default shell
       become: yes
       ansible.builtin.shell: >
@@ -84,6 +92,7 @@
           plugins=(git)
 
           source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
           HISTSIZE=10000
           SAVEHIST=10000
