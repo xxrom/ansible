@@ -1,3 +1,4 @@
 secret_vars*.yml
 test.sh
 vaultpassw
+**/.DS_Store

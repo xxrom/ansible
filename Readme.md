@@ -35,6 +35,10 @@ Be sure that vaultpassw file is in .gitignore file
 
 `asnbile-playbook install_common.yml --ask-vault-pass`
 
+## How to use ansible with inventory (to set reset some parameters if needed)
+
+`ansible-playbook -i production.yml --vault-password-file ./vaultpassw ./harbor_registry.yml`
+
 # How to use ansible _without_ vault values:
 
 `asnbile-playbook install_common.yml`
@@ -159,3 +163,5 @@ mirrors:
 # Useful links:
 
 -   k8s aliases: https://learnk8s.io/blog/kubectl-productivity
+
+---
