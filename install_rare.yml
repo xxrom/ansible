@@ -16,3 +16,18 @@
       apt:
         name: autossh
         state: latest
+
+    - name: install fzf
+      apt:
+        name: fzf
+        state: latest
+
+    - name: install silversearcher-ag
+      apt:
+        name: silversearcher-ag
+        state: latest
+
+    - name: install ripgrep
+      apt:
+        name: ripgrep
+        state: latest
