@@ -1,6 +1,6 @@
 ---
 - name: Synchronize Neovim configuration across all VMs
-  hosts: renaissance_master
+  hosts: renaissance # master
   become: true
 
   vars_files:

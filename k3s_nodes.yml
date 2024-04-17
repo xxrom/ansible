@@ -1,6 +1,6 @@
 ---
 - name: htop-vim-install
-  hosts: renaissance_nodes
+  hosts: renaissance # nodes
   become: yes
 
   vars_files:

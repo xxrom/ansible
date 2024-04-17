@@ -1,6 +1,6 @@
 ---
 - name: cron-autossh-install
-  hosts: renaissance
+  hosts: renaissance # master
   become: yes
 
   vars_files:

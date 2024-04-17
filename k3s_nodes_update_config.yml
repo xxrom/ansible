@@ -1,6 +1,6 @@
 ---
 - name: Configure k3s to use updated token and IP (used secret_vars_k3s_nodes.yml)
-  hosts: renaissance_nodes
+  hosts: renaissance # nodes
   become: yes
 
   vars_files:

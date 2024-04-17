@@ -1,6 +1,6 @@
 ---
 - name: install neovim latest version
-  hosts: renaissance_master
+  hosts: renaissance # master
   become: yes
 
   vars_files:

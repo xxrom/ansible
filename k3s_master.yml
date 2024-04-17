@@ -1,6 +1,6 @@
 ---
 - name: htop-vim-install
-  hosts: renaissance_master
+  hosts: renaissance # master
   become: yes
 
   vars_files:
