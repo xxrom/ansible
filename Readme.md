@@ -11,8 +11,8 @@ sudo apt install ansible -y`
 
 ## Ansible host file location
 
--   linux `/usr/local/etc/ansible/`
--   macos `/etc/ansible/hosts`
+- linux `/usr/local/etc/ansible/`
+- macos `/etc/ansible/hosts`
 
 ---
 
@@ -54,7 +54,7 @@ Be sure that vaultpassw file is in .gitignore file
 Command for creating secret file for storing values:
 `ansible-vault create secret_vars_common.yml`
 
--   then enter a new Valut password. This password is used to encrypt/decrypt the file.
+- then enter a new Valut password. This password is used to encrypt/decrypt the file.
 
 Command for viewing secret:
 `ansible-vault view secret_vars_common.yml`
@@ -104,54 +104,7 @@ all:
 
 ---
 
-# Harbor (local self-hosted docker registry)
-
-## Harbor how to config and run on master k3s VM (Ubuntu)
-
-1. Dowload latest version from github:
-   `wget https://github.com/goharbor/harbor/releases/download/v2.9.3/harbor-offline-installer-v2.9.3.tgz`
-2. Extract
-   ... todo ...
-
-### Default Harbor user / password:
-
-```
-username: admin
-password: Harbor12345
-```
-
 ---
-
-## Harbor example how to publish docker image
-
-1. Run using IP and PORT (192.168.77.150:8044)
-
-2. Creta new user (nikita / password)
-
-3. Login from docker
-   `docker login 192.168.77.150:8044`
-   `docker login core.harbor.domain --username=admin --password Harbor12345`
-
-4. Create simple nginx local 'Dockerfile'
-
-```
-FROM nginx:1.10.1-alpine
-COPY index.html /usr/share/nginx/html
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
-
-```
-
-4. Create docker image
-   `sudo docker build -t nginx-example .`
-
-5. Add tag to created image
-   `docker tag nginx-example 192.168.77.150:8044/library/nginx-example:latest`
-
-6. Push to local docker registry - Harbor
-   `docker push 192.168.77.150:8044/library/nginx-example:latest`
-
-7. Use this image name with full path in yaml config file
 
 ```
 ...
@@ -189,6 +142,6 @@ mirrors:
 
 # Useful links:
 
--   k8s aliases: https://learnk8s.io/blog/kubectl-productivity
+- k8s aliases: https://learnk8s.io/blog/kubectl-productivity
 
 ---
