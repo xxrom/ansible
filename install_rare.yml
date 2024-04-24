@@ -31,3 +31,8 @@
       apt:
         name: ripgrep
         state: latest
+
+    - name: install kubectx
+      apt:
+        name: kubectx
+        state: latest
