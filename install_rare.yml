@@ -32,7 +32,29 @@
         name: ripgrep
         state: latest
 
-    - name: install kubectx
-      apt:
-        name: kubectx
-        state: latest
+    - name: clone kubectx
+      become: yes
+      ansible.builtin.git:
+        repo: https://github.com/ahmetb/kubectx
+        dest: /opt/kubectx
+        version: master
+
+
+    # Analogs for these commands:
+    #ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx;
+    #ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+    - name: Ensure kubectx is symlinked
+      become: yes
+      ansible.builtin.file:
+        src: /opt/kubectx/kubectx
+        dest: /usr/local/bin/kubectx
+        state: link
+        force: yes
+
+    - name: Ensure kubens is symlinked
+      become: yes
+      ansible.builtin.file:
+        src: /opt/kubectx/kubens
+        dest: /usr/local/bin/kubens
+        state: link
+        force: yes

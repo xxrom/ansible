@@ -220,5 +220,13 @@
           alias cl='clear';
           alias up='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y';
 
+          # k3s / minikube
+          alias kk='k3s kubectl';
+
+          # Docker
+          alias dockerCleanAll='sudo docker system prune && sudo docker image prune -f && sudo docker image prune -a';
+          alias dockerDf="docker system df -v"; # show disk usage
+          alias dockerPrune='docker system prune -a'; # clean unused disks
+
         mode: '0644'
         owner: "{{ ansible_env.USER }}"
