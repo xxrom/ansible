@@ -24,25 +24,25 @@
         path: "{{ user_path }}/.zshrc"
         state: touch
         owner: "{{ ansible_env.USER }}"
-        mode: '0644'
+        mode: "0644"
 
     - name: Ensure ~/.alias exists
       ansible.builtin.file:
         path: "{{ user_path }}/.alias"
         state: touch
         owner: "{{ ansible_env.USER }}"
-        mode: '0644'
+        mode: "0644"
 
     - name: Ensure Zsh plugins directory exists
       ansible.builtin.file:
         path: "{{ user_path }}/.zsh/plugins"
         state: directory
         owner: "{{ ansible_env.USER }}"
-        mode: '0755'
+        mode: "0755"
 
     - name: Clone zsh-syntax-highlighting
       ansible.builtin.git:
-        repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+        repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
         dest: "{{ user_path }}/.zsh/plugins/zsh-syntax-highlighting"
         version: master
         clone: yes
@@ -50,7 +50,7 @@
 
     - name: Clone zsh-autosuggestions
       ansible.builtin.git:
-        repo: 'https://github.com/zsh-users/zsh-autosuggestions'
+        repo: "https://github.com/zsh-users/zsh-autosuggestions"
         dest: "{{ user_path }}/.zsh/plugins/zsh-autosuggestions"
         version: master
         clone: yes
@@ -63,7 +63,7 @@
 
     - name: Install Pure theme
       ansible.builtin.git:
-        repo: 'https://github.com/sindresorhus/pure.git'
+        repo: "https://github.com/sindresorhus/pure.git"
         dest: "{{ user_path }}/.zsh/pure"
         version: main
         clone: yes
@@ -73,7 +73,7 @@
       become: yes
       ansible.builtin.shell:
         cmd: |
-           ln -s "{{ ansible_env.HOME }}/.zsh/pure/pure.zsh" /usr/local/share/zsh/site-functions/prompt_pure_setup && ln -s "{{ ansible_env.HOME }}/.zsh/pure/async.zsh" /usr/local/share/zsh/site-functions/async
+          ln -s "{{ ansible_env.HOME }}/.zsh/pure/pure.zsh" /usr/local/share/zsh/site-functions/prompt_pure_setup && ln -s "{{ ansible_env.HOME }}/.zsh/pure/async.zsh" /usr/local/share/zsh/site-functions/async
       args:
         creates: "/usr/local/share/zsh/site-functions/prompt_pure_setup"
 
@@ -106,7 +106,7 @@
 
           export MANPATH="/usr/local/man:$MANPATH"
           export LANG=en_US.UTF-8
-        mode: '0644'
+        mode: "0644"
         owner: "{{ ansible_env.USER }}"
 
     - name: Copy .alias configuration
@@ -225,8 +225,8 @@
 
           # Docker
           alias dockerCleanAll='sudo docker system prune && sudo docker image prune -f && sudo docker image prune -a';
-          alias dockerDf="docker system df -v"; # show disk usage
-          alias dockerPrune='docker system prune -a'; # clean unused disks
+          alias dockerDf="sudo docker system df -v"; # show disk usage
+          alias dockerPrune='sudo docker system prune -a'; # clean unused disks
 
-        mode: '0644'
+        mode: "0644"
         owner: "{{ ansible_env.USER }}"
