@@ -1,3 +1,26 @@
+# SSH security
+
+To incread of security on your VMs disable password login and use ssh keys for login.
+
+`sudo nano /etc/ssh/sshd_config` - change config
+
+`sudo systemctl reload sshd` - apply config
+
+```
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+UsePAM no
+```
+
+## How to generate key
+
+`ssh-keygen -t rsa -b 4096` - use it on you pc
+`ssh-copy-id username@your-server-ip` - send generated file to server for login
+
+---
+
+---
+
 Fail2Ban is a tool that helps protect your server against brute-force attacks by dynamically altering your firewall rules to ban IPs that show malicious behavior as defined by "fail" patterns, typically found in server log files. To properly set up and configure Fail2Ban on an Ubuntu server, follow these steps:
 
 ### Step 1: Install Fail2Ban
