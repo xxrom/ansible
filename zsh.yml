@@ -121,6 +121,8 @@
           alias f='fuck ';
 
           alias v='nvim';
+          alias sudovim='sudo -u adunda sudo /bin/nvim '; # change username
+          alias sudov='sudo -u adunda sudo /bin/nvim '; # change username
 
           ## Tmux
           alias tnew='tmux attach || tmux new';
@@ -224,6 +226,8 @@
           alias kk='k3s kubectl';
 
           # Docker
+          dockerStopAllPS() { docker stop $(docker ps -a -q); }
+          alias dockerStopAll=dockerStopAllPS;
           alias dockerCleanAll='sudo docker system prune && sudo docker image prune -f && sudo docker image prune -a';
           alias dockerDf="sudo docker system df -v"; # show disk usage
           alias dockerPrune='sudo docker system prune -a'; # clean unused disks
