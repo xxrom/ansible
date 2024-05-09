@@ -1,5 +1,6 @@
 init-everything:
 	ansible-playbook install_common.yml --vault-password-file ./vaultpassw
+	ansible-playbook install_rare.yml --vault-password-file ./vaultpassw
 	ansible-playbook node.yml --vault-password-file ./vaultpassw
 	ansible-playbook tmux.yml --vault-password-file ./vaultpassw
 	ansible-playbook zsh.yml --vault-password-file ./vaultpassw

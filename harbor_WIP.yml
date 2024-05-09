@@ -14,7 +14,6 @@
     harbor_config_template: "./harbor.yml.tmpl"
 
   tasks:
-
     - name: Install required packages
       ansible.builtin.apt:
         name:
@@ -41,8 +40,7 @@
       ansible.builtin.file:
         path: "{{ harbor_install_dir }}"
         state: directory
-        mode: '777'
-
+        mode: "777"
 
     - name: Download Harbor offline installer
       ansible.builtin.get_url:
@@ -87,9 +85,9 @@
               location: /var/log/harbor
 
     - name: Install Harbor using the installation script
-      ansible.builtin.shell: |
-        {{ harbor_install_dir }}/install.sh
       become: yes
+      ansible.builtin.shell: >
+        sh {{ harbor_install_dir }}/install.sh
 
     - name: Check Harbor UI accessibility
       ansible.builtin.uri:

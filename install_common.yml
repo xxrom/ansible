@@ -42,6 +42,12 @@
         name: python3
         state: latest
 
+    - name: Install python3-venv
+      apt:
+        name: python3-venv
+        state: latest
+      become: yes
+
     - name: install python3-virtualenv
       apt:
         name: python3-virtualenv
@@ -52,35 +58,31 @@
         name: python3-pip
         state: latest
 
-    - name: Ensure pynvim is installed for Neovim Python3 support
+    - name: Install pynvim within the virtual environment using Ansible pip module
+      become: yes
       ansible.builtin.pip:
         name: pynvim
-        state: latest
-      become: yes
+        virtualenv: /opt/neovim_venv
+        virtualenv_command: /usr/bin/python3 -m venv
+
+    - name: pip with python 3.12 fix
+      ansible.builtin.shell: |
+        python3 -m pip config set global.break-system-packages true
+        python3 -m pip install --user --upgrade pynvim
 
     - name: Install yapf globally
+      become: yes
       ansible.builtin.pip:
         name: yapf
         state: latest
-      become: yes
 
     - name: install golang-go
       apt:
         name: golang-go
         state: latest
 
-    - name: install ripgrep
-      apt:
-        name: ripgrep
-        state: latest
-
-    - name: install fzf
-      apt:
-        name: fzf
-        state: latest
-
-    - name: install thef
+    - name: install thefuck
+      become: yes
       ansible.builtin.pip:
         name: thefuck
         extra_args: --user
-      become: yes

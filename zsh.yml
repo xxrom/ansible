@@ -1,7 +1,6 @@
 ---
 - name: Setup Zsh environment
   hosts: renaissance
-  become: yes
 
   vars_files:
     - secret_vars_common.yml
@@ -11,15 +10,18 @@
 
   tasks:
     - name: Update apt cache
+      become: yes
       ansible.builtin.apt:
         update_cache: yes
 
     - name: Install Zsh
+      become: yes
       ansible.builtin.apt:
         name: zsh
         state: present
 
     - name: Ensure ~/.zshrc exists
+      become: yes
       ansible.builtin.file:
         path: "{{ user_path }}/.zshrc"
         state: touch
@@ -27,6 +29,7 @@
         mode: "0644"
 
     - name: Ensure ~/.alias exists
+      become: yes
       ansible.builtin.file:
         path: "{{ user_path }}/.alias"
         state: touch
@@ -34,6 +37,7 @@
         mode: "0644"
 
     - name: Ensure Zsh plugins directory exists
+      become: yes
       ansible.builtin.file:
         path: "{{ user_path }}/.zsh/plugins"
         state: directory
@@ -41,6 +45,7 @@
         mode: "0755"
 
     - name: Clone zsh-syntax-highlighting
+      become: yes
       ansible.builtin.git:
         repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
         dest: "{{ user_path }}/.zsh/plugins/zsh-syntax-highlighting"
@@ -49,6 +54,7 @@
         update: yes
 
     - name: Clone zsh-autosuggestions
+      become: yes
       ansible.builtin.git:
         repo: "https://github.com/zsh-users/zsh-autosuggestions"
         dest: "{{ user_path }}/.zsh/plugins/zsh-autosuggestions"
@@ -61,55 +67,95 @@
       ansible.builtin.shell: >
         chsh -s $(which zsh) {{ ansible_user }}
 
-    - name: Install Pure theme
+    - name: p10k git
+      become: yes
       ansible.builtin.git:
-        repo: "https://github.com/sindresorhus/pure.git"
-        dest: "{{ user_path }}/.zsh/pure"
-        version: main
+        repo: "https://github.com/romkatv/powerlevel10k.git"
+        dest: "{{ user_path }}/powerlevel10k"
+        version: master
         clone: yes
         update: yes
+        depth: 1
 
-    - name: Create symbolic links for Pure theme
-      become: yes
-      ansible.builtin.shell:
-        cmd: |
-          ln -s "{{ ansible_env.HOME }}/.zsh/pure/pure.zsh" /usr/local/share/zsh/site-functions/prompt_pure_setup && ln -s "{{ ansible_env.HOME }}/.zsh/pure/async.zsh" /usr/local/share/zsh/site-functions/async
-      args:
-        creates: "/usr/local/share/zsh/site-functions/prompt_pure_setup"
+    # - name: Install Pure theme
+    #   ansible.builtin.git:
+    #     repo: "https://github.com/sindresorhus/pure.git"
+    #     dest: "{{ user_path }}/.zsh/pure"
+    #     version: main
+    #     clone: yes
+    #     update: yes
+
+    # - name: Create symbolic links for Pure theme
+    #   become: yes
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       ln -s "{{ ansible_env.HOME }}/.zsh/pure/pure.zsh" /usr/local/share/zsh/site-functions/prompt_pure_setup && ln -s "{{ ansible_env.HOME }}/.zsh/pure/async.zsh" /usr/local/share/zsh/site-functions/async
+    #   args:
+    #     creates: "/usr/local/share/zsh/site-functions/prompt_pure_setup"
 
     - name: Copy .zshrc configuration
+      become: yes
       ansible.builtin.copy:
         dest: "{{ user_path }}/.zshrc"
         content: |
           source ~/.alias
 
-          ZSH_THEME="pure"
-          fpath+=(~/.zsh/pure)
+          ZSH_THEME="powerlevel10k/powerlevel10k"
+          POWERLEVEL9K_MODE="nerdfont-complete"
 
-          autoload -U promptinit; promptinit
-          prompt pure
+          # ZSH_THEME="pure"
+          # fpath+=(~/.zsh/pure)
 
-          plugins=(git)
+          # autoload -U promptinit; promptinit
+          # prompt pure
+
+          # add to exports
+          export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # speedup fzf search
+
+          # Bonus: more advance speedup / add ripgrep
+          if type rg &> /dev/null; then
+            # export FZF_DEFAULT_COMMAND='rg --files'
+            export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!.git"'
+            export FZF_DEFAULT_OPTS='-m --height 50% --border'
+          fi
+
+          [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+          plugins=(fzf)
 
           source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
           source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-          HISTSIZE=10000
-          SAVEHIST=10000
+          # History
+          HISTSIZE=1000000
+          SAVEHIST=1000000
 
-          setopt HIST_IGNORE_ALL_DUPS
-          setopt HIST_FIND_NO_DUPS
-          setopt EXTENDED_HISTORY
-          setopt SHARE_HISTORY
+          HISTORY_IGNORE="(ls|pwd|exit|cd)*"
 
+          setopt EXTENDED_HISTORY      # Делать записи в файле истории в формате ':start:elapsed;command'.
+          setopt INC_APPEND_HISTORY    # Писать данные в файл истории немедленно, а не тогда, когда осуществляется выход из оболочки.
+          setopt SHARE_HISTORY         # Использовать во всех сессиях общее хранилище истории.
+          setopt HIST_IGNORE_DUPS      # Не делать повторную запись о только что записанном событии.
+          setopt HIST_IGNORE_ALL_DUPS  # Удалять старую запись о событии в том случае, если новое событие является дубликатом старого.
+          setopt HIST_IGNORE_SPACE     # Не делать записи о командах, начинающихся с пробела.
+          setopt HIST_SAVE_NO_DUPS     # Не записывать дубликаты событий в файл истории.
+          setopt HIST_VERIFY           # Перед выполнением команд показывать записи о них из истории команд.
+          setopt APPEND_HISTORY        # Добавлять записи к файлу истории (по умолчанию).
+          setopt HIST_NO_STORE         # Не хранить записи о командах history.
+          setopt HIST_REDUCE_BLANKS    # Убирать лишние пробелы из командных строк, добавляемых в историю.
+           
           export HISTFILE=~/.zsh_history
-
           export MANPATH="/usr/local/man:$MANPATH"
+
+          # You may need to manually set your language environment
           export LANG=en_US.UTF-8
+
+          source ~/powerlevel10k/powerlevel10k.zsh-theme
+          [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         mode: "0644"
         owner: "{{ ansible_env.USER }}"
 
     - name: Copy .alias configuration
+      become: yes
       ansible.builtin.copy:
         dest: "{{ user_path }}/.alias"
         content: |

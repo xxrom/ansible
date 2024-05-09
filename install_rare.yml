@@ -1,12 +1,20 @@
 ---
 - name: cron-autossh-install
   hosts: renaissance # master
-  become: yes
 
   vars_files:
     - secret_vars_common.yml
 
   tasks:
+    - name: Clone fzf repository
+      ansible.builtin.git:
+        repo: "https://github.com/junegunn/fzf.git"
+        dest: ~/.fzf
+        depth: 1
+
+    - name: Install fzf
+      ansible.builtin.shell: ~/.fzf/install --all
+
     - name: install cron
       apt:
         name: cron
@@ -17,21 +25,10 @@
         name: autossh
         state: latest
 
-    - name: install fzf
-      apt:
-        name: fzf
-        state: latest
-
     - name: install nfs-common
       apt:
         name: nfs-common
         state: latest
-
-    # sudo systemctl restart kubelet
-    # - name: NFS restart kubelet
-    #   become: yes
-    #   ansible.builtin.shell: >
-    #     sudo systemctl restart kubelet
 
     - name: install silversearcher-ag
       apt:

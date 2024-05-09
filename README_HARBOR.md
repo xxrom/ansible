@@ -3,7 +3,7 @@
 ## Harbor how to config and run on master k3s VM (Ubuntu)
 
 1. Download latest version from github:
-   `wget https://github.com/goharbor/harbor/releases/download/v2.9.3/harbor-offline-installer-v2.9.3.tgz`
+   `wget https://github.com/goharbor/harbor/releases/download/v2.10.2/harbor-offline-installer-v2.10.2.tgz`
 2. Extract
    ... todo ...
 
