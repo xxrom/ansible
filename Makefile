@@ -10,7 +10,7 @@ init-everything:
 	# run $ sh ./sh/nvim-sync.sh
 	ansible-playbook nvim-sync.yml --vault-password-file ./vaultpassw
 	ansible-playbook docker.yml --vault-password-file ./vaultpassw
-	# ansible-playbook harbor.yml --vault-password-file ./vaultpassw
+	ansible-playbook harbor_install.yml --vault-password-file ./vaultpassw # Open harbor: admin - Harbor12345 / change password
 	ansible-playbook harbor_registry.yml --vault-password-file ./vaultpassw
 
 

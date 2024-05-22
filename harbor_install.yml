@@ -84,10 +84,27 @@
               rotate_size: 200M
               location: /var/log/harbor
 
+          jobservice:
+            # Maximum number of job workers in job service
+            max_job_workers: 10
+            # The jobLoggers backend name, only support "STD_OUTPUT", "FILE" and/or "DB"
+            job_loggers:
+              - STD_OUTPUT
+              - FILE
+              # - DB
+            # The jobLogger sweeper duration (ignored if `jobLogger` is `stdout`)
+            logger_sweeper_duration: 10 #days
+
+          notification:
+            # Maximum retry count for webhook job
+            webhook_job_max_retry: 3
+            # HTTP client timeout for webhook job
+            webhook_job_http_client_timeout: 3 #seconds
+
     - name: Install Harbor using the installation script
       become: yes
       ansible.builtin.shell: >
-        sh {{ harbor_install_dir }}/install.sh
+        sudo {{ harbor_install_dir }}/install.sh
 
     - name: Check Harbor UI accessibility
       ansible.builtin.uri:
