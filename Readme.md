@@ -136,6 +136,20 @@ mirrors:
 
 ---
 
+# Common commands:
+
+- reboot all:
+  `ansible-playbook -i dev_nodes.yml --vault-password-file ./vaultpassw ./reboot.yml`
+
+- label unlabeled worker from the master node:
+  `kubectl label node alice node-role.kubernetes.io/worker=worker`
+
+- check env values on worker nodes:
+  `sudo cat /etc/systemd/system/k3s-agent.service.env`
+
+- restart k3s-agent on worker nodes:
+  `sudo systemctl restart k3s-agent`
+
 ---
 
 ---
