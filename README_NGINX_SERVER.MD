@@ -38,8 +38,7 @@ Assuming you have Nginx installed on your DigitalOcean server, you’ll configur
    Create symbolic links for each configuration from `sites-available` to `sites-enabled` to activate them:
 
    ```bash
-   sudo ln -s /etc/nginx/sites-available/domain1.com /etc/nginx/sites-enabled/
-   sudo ln -s /etc/nginx/sites-available/domain2.com /etc/nginx/sites-enabled/
+   sudo ln -s /etc/nginx/sites-available/ttt.app /etc/nginx/sites-enabled/ttt.app
    ```
 
 3. **Test and Reload Nginx**:
