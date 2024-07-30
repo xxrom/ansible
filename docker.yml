@@ -1,5 +1,5 @@
 ---
-- name: Synchronize Neovim configuration across all VMs
+- name: Docker configuration across all VMs
   hosts: renaissance # master
   become: true
 

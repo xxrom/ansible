@@ -1,0 +1,31 @@
+- name: Restart Harbor on masters
+  hosts: renaissance
+  become: yes
+
+  vars_files:
+    - secret_vars_common.yml
+
+  vars:
+    harbor_ip: "192.168.77.150:8044"
+    harbor_directory: "/opt/harbor"
+
+  tasks:
+    - name: Stop Harbor
+      ansible.builtin.shell: docker compose down -v
+      args:
+        chdir: "{{ harbor_directory }}"
+      become: true
+
+    - name: Start Harbor
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: "{{ harbor_directory }}"
+      become: true
+
+  handlers:
+    - name: restart docker
+      become: true
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+        enabled: yes

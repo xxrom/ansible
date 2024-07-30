@@ -49,18 +49,6 @@
       notify:
         - restart docker
 
-    - name: Stop Harbor
-      ansible.builtin.shell: docker compose down -v
-      args:
-        chdir: "{{ harbor_directory }}"
-      become: true
-
-    - name: Start Harbor
-      ansible.builtin.shell: docker compose up -d
-      args:
-        chdir: "{{ harbor_directory }}"
-      become: true
-
   handlers:
     - name: restart docker
       become: true

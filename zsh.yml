@@ -165,6 +165,7 @@
           alias c='clear';
           alias cl='clear';
           alias f='fuck ';
+          alias bat='batcat ';
 
           alias v='nvim';
           alias sudovim='sudo -u adunda sudo /bin/nvim '; # change username
@@ -255,12 +256,17 @@
           alias gpf='git push -f'
           alias gaacmf='gaa . && gcn! && gpf'
 
+          # GIT DIFF
+          alias gd='git diff | bat -l diff'
+          alias gdiff='git diff --name-only | fzf --preview "git diff --color {} | bat -l diff" --preview-window=up:80%:wrap'
+
           ## Git, stash
           alias gsl='git stash list'
           alias gsa='git stash apply'
 
           ## Git, count number of commits to master
           alias gcount='git fetch origin master && git rev-list --count HEAD ^origin/master'
+
           ## Basic
           alias rr='source ~/.zshrc';
           alias rra='source ~/.alias';

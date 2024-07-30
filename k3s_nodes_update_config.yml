@@ -1,17 +1,17 @@
 ---
-- name: Configure k3s to use updated token and IP (used secret_vars_k3s_nodes.yml)
+- name: Configure k3s to use updated token and IP (used secret_vars_k3s_nodes_{{ env }}.yml)
   hosts: renaissance # nodes
   become: yes
 
   vars_files:
     - secret_vars_common.yml
-    - secret_vars_k3s_nodes.yml
+    - "secret_vars_k3s_nodes_{{ env }}.yml"
 
   # token location on master
   # $ sudo cat /var/lib/rancher/k3s/server/node-token
   #
   # update secret_vars_k3s_nodes => token
-  # $ ansible-playbook edit secret_vars_k3s_nodes.yml
+  # $ ansible-playbook edit secret_vars_k3s_nodes_prod.yml
 
   tasks:
 

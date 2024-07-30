@@ -6,3 +6,11 @@ all:
           ansible_host: 192.168.77.170
           ansible_user: latte
           ansible_ssh_private_key_file: /Users/nikita/ansible/ssh/latte
+        moka:
+          ansible_host: 192.168.77.171
+          ansible_user: moka 
+          ansible_ssh_private_key_file: /Users/nikita/ansible/ssh/moka
+        matcha:
+          ansible_host: 192.168.77.172
+          ansible_user: matcha 
+          ansible_ssh_private_key_file: /Users/nikita/ansible/ssh/matcha

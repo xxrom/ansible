@@ -26,6 +26,7 @@
         state: latest
 
     - name: install nfs-common
+      become: yes
       apt:
         name: nfs-common
         state: latest
@@ -38,6 +39,12 @@
     - name: install ripgrep
       apt:
         name: ripgrep
+        state: latest
+
+    - name: install bat 
+      become: yes
+      apt:
+        name: bat 
         state: latest
 
     - name: clone kubectx

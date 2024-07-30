@@ -9,6 +9,67 @@ sudo apt install ansible -y`
 
 ---
 
+# Use ssh with private key connection to VMs, so it will be easier and secure
+
+1. `ssh-keygen -t rsa -b 4096`
+   Set a file location and press ‘Enter’ double times for the passphrase (use empty password). 🔑
+
+2. Transfer the public key `ssh-copy-id -i ~/.ssh/id_rsa.pub user@remote_address`
+
+3. Test: `ssh -i ~/.ssh/id_rsa user@remote_address`
+
+4. Update ansible hosts with new VMs:
+
+```
+all:
+  children:
+    renaissance:
+      hosts:
+        latte:
+          ansible_host: 192.168.77.170
+          ansible_user: latte
+          ansible_ssh_private_key_file: /Users/nikita/ansible/ssh/latte
+
+```
+
+---
+
+---
+
+---
+
+---
+
+---
+
+```
+...
+containers:
+- name: nginx
+  image: 192.168.77.150:8044/library/nginx-example
+  imagePullPolicy: IfNotPresent
+  ports:
+  - containerPort: 80
+...
+
+```
+
+8. On Master and Nodes add this mirror for checking docker images:
+   file: `/etc/rancher/k3s/registries.yaml`
+   use IP and PORT of the Harbor VMs:
+
+```
+mirrors:
+  "192.168.77.150:8044":
+    endpoint:
+      - "http://192.168.77.150:8044"
+```
+
+9. Restart k3s
+   `sudo systemctl restart k3s`
+
+---
+
 ## Ansible host file location
 
 - linux `/usr/local/etc/ansible/`
@@ -75,62 +136,7 @@ server: 192.168.1.100
 token: 23fasdf3::server:1234asdf
 ```
 
-# Use ssh with private key connection to VMs, so it will be easier and secure
-
-1. `ssh-keygen -t rsa -b 4096`
-   Set a file location and press ‘Enter’ double tiems for the passphrase (use empty password). 🔑
-
-2. Transfer the public key `ssh-copy-id -i ~/.ssh/id_rsa.pub user@remote_address`
-
-3. Test: `ssh -i ~/.ssh/id_rsa username@remote_address`
-
-```
-all:
-  children:
-    renaissance:
-      hosts:
-        latte:
-          ansible_host: 192.168.77.170
-          ansible_user: latte
-          ansible_ssh_private_key_file: /Users/nikita/ansible/ssh/latte
-
-```
-
 ---
-
----
-
----
-
----
-
----
-
-```
-...
-containers:
-- name: nginx
-  image: 192.168.77.150:8044/library/nginx-example
-  imagePullPolicy: IfNotPresent
-  ports:
-  - containerPort: 80
-...
-
-```
-
-8. On Master and Nodes add this mirror for checking docker images:
-   file: `/etc/rancher/k3s/registries.yaml`
-   use IP and PORT of the Harbor VMs:
-
-```
-mirrors:
-  "192.168.77.150:8044":
-    endpoint:
-      - "http://192.168.77.150:8044"
-```
-
-9. Restart k3s
-   `sudo systemctl restart k3s`
 
 ---
 

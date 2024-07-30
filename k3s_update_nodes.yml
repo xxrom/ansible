@@ -1,0 +1,39 @@
+---
+- name: Update k3s Nodes
+  hosts: renaissance
+  become: yes
+
+  vars:
+    k3s_version: "v1.30.2+k3s1"
+
+  vars_files:
+    - "secret_vars_k3s_nodes_{{ env }}.yml"
+    - secret_vars_common.yml
+
+  tasks:
+    - name: Stop K3s agent service
+      systemd:
+        name: k3s-agent
+        state: stopped
+
+    - name: Backup K3s agent configuration
+      copy:
+        src: /etc/rancher/k3s
+        dest: /etc/rancher/k3s-agent.bak
+        remote_src: yes
+
+    - name: Download and install the specific version of K3s
+      ansible.builtin.shell: >
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="agent" K3S_URL="https://{{ server }}:6443" K3S_TOKEN="{{ token }}" sh -
+
+    - name: Force restart K3s agent service (without waiting restart !!! "&")
+      ansible.builtin.shell: >
+        sudo systemctl stop k3s-agent && sudo systemctl start k3s-agent &
+
+    - name: Verify K3s version
+      command: k3s --version
+      register: k3s_version_output
+
+    - name: Display K3s version
+      debug:
+        msg: "K3s version is {{ k3s_version_output.stdout }}"
