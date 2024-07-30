@@ -7,16 +7,33 @@
     - secret_vars_common.yml
 
   tasks:
+    - name: Remove the problematic Neovim PPA if exists
+      ansible.builtin.apt_repository:
+        repo: ppa:neovim-ppa/stable
+        state: absent
+
+    - name: Remove GPG key associated with the Neovim PPA
+      ansible.builtin.command:
+        cmd: apt-key del <key-id>
+      ignore_errors: true
+
     - name: ensure software-properties-common is installed
       ansible.builtin.apt:
         name: software-properties-common
         state: present
+        
+    - name: remove conflicting neovim ppa if exists
+      ansible.builtin.apt_repository:
+        repo: ppa:neovim-ppa/stable
+        state: absent
+      ignore_errors: yes
 
     - name: add neovim ppa
       ansible.builtin.apt_repository:
-        repo: ppa:neovim-ppa/unstable
+        repo: ppa:neovim-ppa/stable
         state: present
       become: yes
+      #repo: ppa:neovim-ppa/unstable
 
     - name: install neovim
       ansible.builtin.apt:

@@ -42,6 +42,11 @@
         name: python3
         state: latest
 
+    - name: install unzip 
+      apt:
+        name: unzip 
+        state: latest
+
     - name: Install python3-venv
       apt:
         name: python3-venv
