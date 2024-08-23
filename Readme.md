@@ -150,6 +150,9 @@ token: 23fasdf3::server:1234asdf
 - label unlabeled worker from the master node:
   `kubectl label node alice node-role.kubernetes.io/worker=worker`
 
+- label master node to run only core k3s services:
+  ` kk taint nodes latte key=value:NoSchedule`
+
 - check env values on worker nodes:
   `sudo cat /etc/systemd/system/k3s-agent.service.env`
 
