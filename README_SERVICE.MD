@@ -1,5 +1,7 @@
 To add logging to your `ssh-tunnel.service` systemd service for better monitoring and troubleshooting, you'll need to adjust the `ExecStart` line to include verbosity options and redirect the output to a log file. Here’s how you can configure this:
 
+- service folder path: `cd /etc/systemd/system/`
+
 ### Step 1: Create a Log File
 
 First, decide where you want your log files to be stored. A common location for custom logs on Linux systems is within the `/var/log/` directory. You'll need to create a log file that your service will write to.
