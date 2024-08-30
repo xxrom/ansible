@@ -67,6 +67,14 @@ For better security, consider securing your domains with SSL/TLS certificates:
    sudo certbot --nginx -d domain2.com -d www.domain2.com
    ```
 
+## STEP 5: Check dns record update
+
+```bash
+dig dev.litl.pro
+```
+
+- Ensure that the A record for dev.litl.pro is set up properly in your DNS settings.
+
 ### Conclusion
 
 By following these steps, you can host multiple websites on a single server, each accessible via its own domain name. Nginx handles the incoming requests and serves content based on the requested domain. This setup is efficient and scalable, suitable for hosting several small to medium websites.

@@ -31,9 +31,11 @@ Edit your systemd service file to direct the output of `autossh` to the log file
 2. **Update `ExecStart`**:
    Modify the `ExecStart` line to include verbosity and log output. Adding `-v` increases verbosity (you can use `-vv` or `-vvv` for more detailed logs). Redirect both standard output and standard error to your log file:
 
+   - Updated port for traefic v2
+
    ```ini
    [Service]
-   ExecStart=/usr/bin/autossh -M 0 -v -N -R 127.0.0.1:6070:localhost:80 -o "ServerAliveInterval=30" -o "ServerAliveCountMax=100" -o "ExitOnForwardFailure=yes" -i /home/adunda/.ssh/id_do tt@178.128.195.181 >> /var/log/ssh-tunnel.log 2>&1
+   ExecStart=/usr/bin/autossh -M 0 -v -N -R 0.0.0.0:6070:0.0.0.0:31769 -o "ServerAliveInterval=30" -o "ServerAliveCountMax=100" -o "ExitOnForwardFailure=yes" -i /home/adunda/.ssh/id_do tt@178.128.195.181 >> /var/log/ssh-tunnel.log 2>&1
    Restart=always
    RestartSec=30
    ```

@@ -2,6 +2,14 @@ I had issue with port forwarding 6061 port from my local Server to DigitalOcean 
 
 Solution: (main issue was with "AllowTcpForwarding" and "GatewayPorts")
 
+## AllowTcpForwarding yes
+
+- What It Does: This parameter controls whether TCP forwarding is permitted on the SSH server. TCP forwarding is the mechanism that allows the SSH server to forward traffic from a port on the server to another destination. This is essential for setting up tunnels, whether for local, remote, or dynamic port forwarding.
+
+## GatewayPorts yes
+
+- What It Does: This parameter controls whether remote forwarded ports (in reverse SSH tunnels) bind to all available interfaces on the SSH server (0.0.0.0), or just to the loopback interface (127.0.0.1).
+
 ### 1. **Check Firewall Rules on DigitalOcean**
 
 ```bash
@@ -14,7 +22,7 @@ sudo ufw allow 6061/tcp
 - Verify that your SSH configuration on the DigitalOcean server permits port forwarding. Ensure `AllowTcpForwarding` and `GatewayPorts` are set to `yes` in your SSH daemon configuration.
 
 ```bash
-sudo nano /etc/ssh/sshd_config
+sudo vi /etc/ssh/sshd_config
 ```
 
 - Look for these lines (add or modify if necessary):
